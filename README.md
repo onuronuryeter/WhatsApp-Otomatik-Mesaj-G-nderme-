@@ -12,7 +12,7 @@ Google Haritalar'dan veya farklı kaynaklardan yasal yollarla edindiğiniz işle
 
 1. **Projeyi indirin:**
 ```bash
-git clone https://github.com/KULLANICI_ADINIZ/WHATSAPP-OTOMATIK-MESAJ-BOTU.git
+git clone https://github.com/onuronuryeter/WhatsApp-Otomatik-Mesaj-G-nderme-.git
 cd "WHATSAPP OTOMATİK MESAJ BOTU"
 ```
 
