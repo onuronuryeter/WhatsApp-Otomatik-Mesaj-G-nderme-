@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Business Bot — Profesyonel Kampanya Yöneticisi</title>
+  <meta name="description" content="WhatsApp Business ile otomatik mesaj gönderin. Excel'den kişi içe aktarın, kampanya yönetin ve zamanlayıcı ile otomatik iletişim kurun." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Custom Title Bar -->
+  <div class="titlebar" id="titlebar">
+    <div class="titlebar-left">
+      <div class="titlebar-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="#25d366"/>
+        </svg>
+      </div>
+      <span class="titlebar-title">WhatsApp Business Bot</span>
+      <span class="titlebar-version">v1.0</span>
+    </div>
+    <div class="titlebar-drag"></div>
+    <div class="titlebar-controls">
+      <button class="tb-btn tb-minimize" id="btn-minimize" title="Küçült">─</button>
+      <button class="tb-btn tb-maximize" id="btn-maximize" title="Büyüt">□</button>
+      <button class="tb-btn tb-close" id="btn-close" title="Kapat">✕</button>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+      <!-- WhatsApp Connection Status -->
+      <div class="wa-status-badge" id="wa-status-badge">
+        <div class="wa-dot" id="wa-dot"></div>
+        <span id="wa-status-text">Bağlantı Bekleniyor</span>
+      </div>
+
+      <div class="nav-section-label">ANA MENÜ</div>
+      <ul class="nav-list">
+        <li class="nav-item active" data-page="dashboard">
+          <div class="nav-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity=".8"/><rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity=".8"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity=".8"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity=".8"/></svg>
+          </div>
+          <span>Dashboard</span>
+        </li>
+        <li class="nav-item" data-page="whatsapp">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="currentColor"/></svg>
+          </div>
+          <span>WhatsApp Bağlantısı</span>
+        </li>
+        <li class="nav-item" data-page="contacts">
+          <div class="nav-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <span>Kişiler</span>
+          <span class="nav-badge" id="contacts-badge">0</span>
+        </li>
+        <li class="nav-item" data-page="templates">
+          <div class="nav-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/><polyline points="10 9 9 9 8 9" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <span>Mesaj Şablonları</span>
+        </li>
+        <li class="nav-item" data-page="campaigns">
+          <div class="nav-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span>Kampanyalar</span>
+          <span class="nav-badge active-badge" id="campaigns-badge" style="display:none">●</span>
+        </li>
+        <li class="nav-item" data-page="queue">
+          <div class="nav-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span>Mesaj Kuyruğu</span>
+          <span class="nav-badge pending-badge" id="queue-badge">0</span>
+        </li>
+      </ul>
+
+      <div class="nav-section-label">ANALİZ</div>
+      <ul class="nav-list">
+        <li class="nav-item" data-page="analytics">
+          <div class="nav-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="20" x2="12" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="20" x2="6" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <span>İstatistikler</span>
+        </li>
+        <li class="nav-item" data-page="logs">
+          <div class="nav-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span>Günlükler</span>
+        </li>
+        <li class="nav-item" data-page="blacklist">
+          <div class="nav-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <span>Kara Liste</span>
+        </li>
+      </ul>
+
+      <div class="nav-section-label" style="margin-top:auto">SİSTEM</div>
+      <ul class="nav-list">
+        <li class="nav-item" data-page="settings">
+          <div class="nav-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <span>Ayarlar</span>
+        </li>
+      </ul>
+
+      <!-- Scheduler Control -->
+      <div class="scheduler-control" id="scheduler-control">
+        <div class="scheduler-status" id="scheduler-status-indicator">
+          <div class="pulse-dot"></div>
+          <span id="scheduler-status-text">Zamanlayıcı Durduruldu</span>
+        </div>
+        <button class="btn-scheduler-toggle" id="btn-scheduler-toggle">▶ Başlat</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+
+      <!-- =================== DASHBOARD =================== -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-header">
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-subtitle">Tüm kampanya ve mesajlaşma istatistikleriniz</p>
+        </div>
+
+        <div class="stats-grid" id="dashboard-stats">
+          <div class="stat-card" style="--accent: #25d366">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-total-contacts">0</div>
+              <div class="stat-label">Toplam Kişi</div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent: #4ade80">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="2"/><polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-has-whatsapp">0</div>
+              <div class="stat-label">WhatsApp'lı</div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent: #60a5fa">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><line x1="22" y1="2" x2="11" y2="13" stroke="currentColor" stroke-width="2"/><polygon points="22 2 15 22 11 13 2 9 22 2" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-sent">0</div>
+              <div class="stat-label">Gönderilen</div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent: #f59e0b">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-pending">0</div>
+              <div class="stat-label">Bekleyen</div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent: #ef4444">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2"/><line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-failed">0</div>
+              <div class="stat-label">Başarısız</div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent: #a78bfa">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-today">0</div>
+              <div class="stat-label">Bugün Gönderilen</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Chart -->
+        <div class="chart-section">
+          <div class="section-header">
+            <h2 class="section-title">Son 7 Günlük Aktivite</h2>
+          </div>
+          <div class="chart-container">
+            <canvas id="activityChart" height="200"></canvas>
+          </div>
+        </div>
+
+        <!-- Active Campaigns -->
+        <div class="section-header" style="margin-top:24px">
+          <h2 class="section-title">Aktif Kampanyalar</h2>
+          <button class="btn btn-primary btn-sm" onclick="navigateTo('campaigns')">+ Yeni Kampanya</button>
+        </div>
+        <div id="dashboard-campaigns" class="campaign-list-mini"></div>
+
+        <!-- Recent Activity -->
+        <div class="section-header" style="margin-top:24px">
+          <h2 class="section-title">Son Aktivite</h2>
+        </div>
+        <div class="activity-feed" id="activity-feed"></div>
+      </section>
+
+      <!-- =================== WHATSAPP =================== -->
+      <section class="page" id="page-whatsapp">
+        <div class="page-header">
+          <h1 class="page-title">WhatsApp Bağlantısı</h1>
+          <p class="page-subtitle">Bağlan butonuna basın — Chrome penceresi açılır, QR kodu tarayın</p>
+        </div>
+
+        <div class="wa-connect-layout">
+          <div class="wa-qr-card glass-card" id="wa-qr-card">
+            <div class="wa-qr-content">
+              <div class="wa-qr-status" id="wa-qr-status">
+
+                <!-- Bekleyen durum -->
+                <div class="wa-idle-state" id="wa-idle-state" style="display:flex">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" style="opacity:.4"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="currentColor"/></svg>
+                  <p>WhatsApp bağlantısı bekliyor</p>
+                </div>
+
+                <!-- Chrome penceresi açılıyor / QR bekleniyor -->
+                <div class="wa-waiting-state" id="wa-waiting-state" style="display:none;flex-direction:column;align-items:center;gap:16px;padding:24px">
+                  <div class="wa-spinner-ring"></div>
+                  <div style="text-align:center">
+                    <h3 style="color:var(--accent-green);margin-bottom:8px">Chrome Penceresi Açıldı</h3>
+                    <p style="color:var(--text-secondary);font-size:14px">WhatsApp Web sayfasında QR kodu görüyorsunuz.<br>Telefonunuzla tarayın.</p>
+                    <p id="wa-status-message" style="display:none;color:var(--accent-amber);font-size:12px;margin-top:12px;background:rgba(245,158,11,.1);padding:8px 12px;border-radius:8px"></p>
+                  </div>
+                  <div class="wa-steps-mini">
+                    <div class="ws-step"><span class="ws-num">1</span> WhatsApp'ı aç</div>
+                    <div class="ws-step"><span class="ws-num">2</span> Bağlı Cihazlar → Cihaz Ekle</div>
+                    <div class="ws-step"><span class="ws-num">3</span> QR kodu tara</div>
+                  </div>
+                </div>
+
+                <!-- Bağlı -->
+                <div class="wa-connected-state" id="wa-connected-state" style="display:none">
+                  <div class="wa-connected-icon">✓</div>
+                  <h3>Bağlantı Başarılı!</h3>
+                  <p id="wa-connected-name" style="font-size:16px;font-weight:600;color:var(--text-primary)"></p>
+                  <p id="wa-connected-phone" style="font-size:14px;color:var(--accent-green)"></p>
+                </div>
+
+              </div>
+            </div>
+            <div class="wa-actions">
+              <button class="btn btn-success btn-lg" id="btn-wa-connect">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                Bağlan (Chrome Penceresi Açar)
+              </button>
+              <button class="btn btn-danger btn-lg" id="btn-wa-disconnect" style="display:none">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/></svg>
+                Bağlantıyı Kes
+              </button>
+              <button class="btn btn-warning btn-lg" id="btn-wa-force-ready" style="display:none; margin-top:8px; background:var(--accent-amber); border-color:var(--accent-amber); color:white;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Bağlantıyı Yenile
+              </button>
+            </div>
+          </div>
+
+          <div class="wa-info-panel">
+            <div class="glass-card">
+              <h3 class="card-title">Bağlantı Durumu</h3>
+              <div class="wa-status-details" id="wa-status-details">
+                <div class="status-row">
+                  <span class="status-label">Durum:</span>
+                  <span class="status-value status-badge-disconnected" id="detail-status">Bağlı Değil</span>
+                </div>
+                <div class="status-row" id="detail-phone-row" style="display:none">
+                  <span class="status-label">Telefon:</span>
+                  <span class="status-value" id="detail-phone">—</span>
+                </div>
+                <div class="status-row" id="detail-name-row" style="display:none">
+                  <span class="status-label">Hesap Adı:</span>
+                  <span class="status-value" id="detail-name">—</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card" style="margin-top:16px">
+              <h3 class="card-title">Test Mesajı Gönder</h3>
+              <div class="form-group">
+                <label class="form-label">Telefon Numarası</label>
+                <input type="text" class="form-input" id="test-phone" placeholder="905XXXXXXXXX" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mesaj</label>
+                <textarea class="form-input form-textarea" id="test-message" placeholder="Test mesajı yazın..." rows="4"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-secondary btn-sm" id="btn-check-number">Numara Kontrol</button>
+                <button class="btn btn-primary btn-sm" id="btn-send-test">Test Gönder</button>
+              </div>
+              <div id="test-result" class="test-result" style="display:none"></div>
+            </div>
+
+            <div class="glass-card" style="margin-top:16px">
+              <h3 class="card-title">Kullanım Kılavuzu</h3>
+              <ol class="guide-list">
+                <li>Telefonunuzda WhatsApp'ı açın</li>
+                <li>Sağ üst menü → <strong>Bağlı Cihazlar</strong></li>
+                <li><strong>Cihaz Bağla</strong> seçeneğine tıklayın</li>
+                <li>Soldaki QR kodu telefonla tarayın</li>
+                <li>Bağlantı otomatik tamamlanır</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== CONTACTS =================== -->
+      <section class="page" id="page-contacts">
+        <div class="page-header">
+          <h1 class="page-title">Kişi Yönetimi</h1>
+          <p class="page-subtitle">Excel'den kişi içe aktarın ve yönetin</p>
+        </div>
+
+        <!-- Import Area -->
+        <div class="glass-card import-card" id="import-card">
+          <div class="import-header">
+            <h3 class="card-title">Excel Dosyası İçe Aktar</h3>
+            <span class="import-hint">Google Maps verisi: İşletme adı, telefon, e-posta, adres, puan, kategori...</span>
+          </div>
+          <div class="drop-zone" id="drop-zone">
+            <div class="drop-zone-content">
+              <svg width="48" height="48" fill="none" viewBox="0 0 24 24" style="opacity:.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="1.5"/><polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="1.5"/></svg>
+              <p>Excel / CSV dosyanızı içe aktarın</p>
+              <button class="btn btn-primary" id="btn-excel-import">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2"/><polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2"/><line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2"/></svg>
+                Dosya Seç (Pencere Açar)
+              </button>
+              <p class="drop-hint">.xlsx, .xls, .csv — sütunlar otomatik eşleştirilir</p>
+            </div>
+          </div>
+          <div class="import-progress" id="import-progress" style="display:none">
+            <div class="progress-bar-wrap">
+              <div class="progress-bar" id="import-progress-bar"></div>
+            </div>
+            <p id="import-progress-text">İçe aktarılıyor...</p>
+          </div>
+          <div class="import-result" id="import-result" style="display:none"></div>
+        </div>
+
+        <!-- Filters & Search -->
+        <div class="table-controls">
+          <div class="search-box">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input type="text" id="contacts-search" placeholder="İsim, telefon veya adres ara..." class="search-input" />
+          </div>
+          <div class="filter-group">
+            <select class="form-select" id="filter-category">
+              <option value="">Tüm Kategoriler</option>
+            </select>
+            <select class="form-select" id="filter-whatsapp">
+              <option value="">WhatsApp Durumu</option>
+              <option value="1">WhatsApp Var</option>
+              <option value="0">WhatsApp Yok</option>
+              <option value="-1">Kontrol Edilmedi</option>
+            </select>
+            <select class="form-select" id="filter-status">
+              <option value="">Tüm Durumlar</option>
+              <option value="pending">Bekleyen</option>
+              <option value="sent">Gönderildi</option>
+            </select>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-secondary btn-sm" id="btn-check-all-numbers">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="2"/><polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" stroke-width="2"/></svg>
+              WA Kontrol
+            </button>
+            <button class="btn btn-danger-outline btn-sm" id="btn-delete-nowa">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="2"/></svg>
+              WA Olmayanları Sil
+            </button>
+            <button class="btn btn-danger-outline btn-sm" id="btn-delete-all-contacts">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" stroke="currentColor" stroke-width="2"/><path d="M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2"/></svg>
+              Tümünü Sil
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrapper glass-card">
+          <table class="data-table" id="contacts-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all-contacts" /></th>
+                <th>İşletme Adı</th>
+                <th>Telefon</th>
+                <th>Kategori</th>
+                <th>Puan</th>
+                <th>WhatsApp</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody id="contacts-tbody">
+              <tr><td colspan="8" class="empty-state">Kişi bulunamadı. Excel dosyası içe aktarın.</td></tr>
+            </tbody>
+          </table>
+          <div class="table-footer">
+            <span id="contacts-count-text">0 kişi</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== TEMPLATES =================== -->
+      <section class="page" id="page-templates">
+        <div class="page-header">
+          <h1 class="page-title">Mesaj Şablonları</h1>
+          <p class="page-subtitle">Kişiselleştirilmiş mesaj şablonları oluşturun</p>
+        </div>
+
+        <div class="templates-layout">
+          <div class="templates-list-panel glass-card">
+            <div class="panel-header">
+              <h3>Şablonlar</h3>
+              <button class="btn btn-primary btn-sm" id="btn-new-template">+ Yeni</button>
+            </div>
+            <div id="templates-list" class="templates-list"></div>
+          </div>
+
+          <div class="template-editor-panel glass-card" id="template-editor">
+            <div class="editor-placeholder" id="editor-placeholder">
+              <svg width="48" height="48" fill="none" viewBox="0 0 24 24" style="opacity:.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5"/></svg>
+              <p>Düzenlemek için bir şablon seçin veya yeni oluşturun</p>
+            </div>
+            <div class="editor-form" id="editor-form" style="display:none">
+              <div class="form-group">
+                <label class="form-label">Şablon Adı</label>
+                <input type="text" class="form-input" id="template-name" placeholder="Tanıtım mesajı..." />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mesaj İçeriği</label>
+                <div class="editor-toolbar">
+                  <span class="toolbar-label">Değişkenler:</span>
+                  <button class="var-tag" data-var="{isletme_adi}">İşletme Adı</button>
+                  <button class="var-tag" data-var="{telefon}">Telefon</button>
+                  <button class="var-tag" data-var="{adres}">Adres</button>
+                  <button class="var-tag" data-var="{puan}">Puan</button>
+                  <button class="var-tag" data-var="{kategori}">Kategori</button>
+                  <button class="var-tag" data-var="{email}">E-posta</button>
+                  <button class="var-tag" data-var="{web}">Web Sitesi</button>
+                </div>
+                <textarea class="form-input form-textarea editor-textarea" id="template-content" placeholder="Merhaba {isletme_adi},&#10;&#10;Hizmetlerimizi tanıtmak istiyoruz..." rows="12"></textarea>
+                <div class="char-count"><span id="template-char-count">0</span> karakter</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Önizleme</label>
+                <div class="message-preview" id="template-preview">
+                  <div class="preview-bubble"></div>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-danger-outline btn-sm" id="btn-delete-template">Sil</button>
+                <button class="btn btn-secondary btn-sm" id="btn-cancel-template">İptal</button>
+                <button class="btn btn-primary" id="btn-save-template">💾 Kaydet</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== CAMPAIGNS =================== -->
+      <section class="page" id="page-campaigns">
+        <div class="page-header">
+          <h1 class="page-title">Kampanya Yönetimi</h1>
+          <p class="page-subtitle">Otomatik mesaj kampanyaları oluşturun ve yönetin</p>
+        </div>
+
+        <div class="campaigns-toolbar">
+          <button class="btn btn-primary" id="btn-new-campaign">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"/><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"/></svg>
+            Yeni Kampanya
+          </button>
+        </div>
+
+        <div id="campaigns-grid" class="campaigns-grid">
+          <div class="empty-campaigns">
+            <svg width="64" height="64" fill="none" viewBox="0 0 24 24" style="opacity:.3"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <p>Henüz kampanya oluşturulmadı</p>
+            <button class="btn btn-primary" onclick="document.getElementById('btn-new-campaign').click()">İlk Kampanyayı Oluştur</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== QUEUE =================== -->
+      <section class="page" id="page-queue">
+        <div class="page-header">
+          <h1 class="page-title">Mesaj Kuyruğu</h1>
+          <p class="page-subtitle">Bekleyen ve gönderilen mesajları takip edin</p>
+        </div>
+
+        <div class="queue-stats-row" id="queue-stats-row">
+          <div class="queue-stat"><div class="qs-val" id="qs-pending">0</div><div class="qs-label">Bekleyen</div></div>
+          <div class="queue-stat"><div class="qs-val green" id="qs-sent">0</div><div class="qs-label">Gönderildi</div></div>
+          <div class="queue-stat"><div class="qs-val red" id="qs-failed">0</div><div class="qs-label">Başarısız</div></div>
+          <div class="queue-stat"><div class="qs-val purple" id="qs-today">0</div><div class="qs-label">Bugün</div></div>
+        </div>
+
+        <div class="table-controls">
+          <div class="filter-group">
+            <select class="form-select" id="queue-filter-status">
+              <option value="">Tüm Durumlar</option>
+              <option value="pending">Bekleyen</option>
+              <option value="sent">Gönderildi</option>
+              <option value="failed">Başarısız</option>
+              <option value="no_whatsapp">WhatsApp Yok</option>
+            </select>
+            <select class="form-select" id="queue-filter-campaign">
+              <option value="">Tüm Kampanyalar</option>
+            </select>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-secondary btn-sm" id="btn-refresh-queue">↻ Yenile</button>
+            <button class="btn btn-danger-outline btn-sm" id="btn-clear-queue">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" stroke="currentColor" stroke-width="2"/><path d="M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2"/></svg>
+              Kuyruğu Temizle
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrapper glass-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Telefon</th>
+                <th>İşletme Adı</th>
+                <th>Mesaj (Önizleme)</th>
+                <th>Durum</th>
+                <th>Zaman</th>
+              </tr>
+            </thead>
+            <tbody id="queue-tbody">
+              <tr><td colspan="5" class="empty-state">Mesaj kuyruğu boş</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================== ANALYTICS =================== -->
+      <section class="page" id="page-analytics">
+        <div class="page-header">
+          <h1 class="page-title">İstatistikler & Analiz</h1>
+          <p class="page-subtitle">Kampanya performansını detaylı analiz edin</p>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="glass-card chart-card">
+            <h3 class="card-title">Günlük Gönderim Trendi (30 Gün)</h3>
+            <canvas id="dailyChart" height="250"></canvas>
+          </div>
+          <div class="glass-card chart-card">
+            <h3 class="card-title">Durum Dağılımı</h3>
+            <canvas id="statusChart" height="250"></canvas>
+          </div>
+          <div class="glass-card chart-card full-width">
+            <h3 class="card-title">WhatsApp Erişim Oranı</h3>
+            <div class="reach-stats" id="reach-stats">
+              <div class="reach-bar-wrap">
+                <div class="reach-bar" id="reach-bar" style="width:0%"></div>
+              </div>
+              <div class="reach-labels">
+                <span class="reach-label green">WhatsApp Var: <strong id="reach-count">0</strong></span>
+                <span class="reach-label red">WhatsApp Yok: <strong id="no-reach-count">0</strong></span>
+                <span class="reach-label">Oran: <strong id="reach-pct">0%</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== LOGS =================== -->
+      <section class="page" id="page-logs">
+        <div class="page-header">
+          <h1 class="page-title">Sistem Günlükleri</h1>
+          <p class="page-subtitle">Tüm mesaj gönderim kayıtları</p>
+        </div>
+
+        <div class="table-wrapper glass-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Zaman</th>
+                <th>Telefon</th>
+                <th>Mesaj</th>
+                <th>Durum</th>
+                <th>Hata</th>
+              </tr>
+            </thead>
+            <tbody id="logs-tbody">
+              <tr><td colspan="5" class="empty-state">Henüz log kaydı yok</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================== BLACKLIST =================== -->
+      <section class="page" id="page-blacklist">
+        <div class="page-header">
+          <h1 class="page-title">Kara Liste</h1>
+          <p class="page-subtitle">Mesaj gönderilmeyecek numaraları yönetin</p>
+        </div>
+
+        <div class="glass-card" style="padding:20px;margin-bottom:20px">
+          <div class="form-row">
+            <input type="text" class="form-input" id="blacklist-phone" placeholder="Telefon numarası (905XXXXXXXXX)" />
+            <input type="text" class="form-input" id="blacklist-reason" placeholder="Neden (opsiyonel)" />
+            <button class="btn btn-danger btn-sm" id="btn-add-blacklist">+ Ekle</button>
+          </div>
+        </div>
+
+        <div class="table-wrapper glass-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Telefon</th>
+                <th>Neden</th>
+                <th>Eklenme Tarihi</th>
+                <th>İşlem</th>
+              </tr>
+            </thead>
+            <tbody id="blacklist-tbody">
+              <tr><td colspan="4" class="empty-state">Kara liste boş</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================== SETTINGS =================== -->
+      <section class="page" id="page-settings">
+        <div class="page-header">
+          <h1 class="page-title">Ayarlar</h1>
+          <p class="page-subtitle">Bot davranışını ve zamanlama parametrelerini yapılandırın</p>
+        </div>
+
+        <div class="settings-grid">
+          <div class="glass-card settings-card">
+            <h3 class="settings-section-title">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="2"/></svg>
+              Zamanlama
+            </h3>
+            <div class="form-group">
+              <label class="form-label">Varsayılan Mesaj Gönderim Başlangıcı</label>
+              <input type="time" class="form-input" id="setting-start-time" value="09:00" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Varsayılan Mesaj Gönderim Bitişi</label>
+              <input type="time" class="form-input" id="setting-end-time" value="18:00" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Varsayılan Saat Dilimi</label>
+              <select class="form-select" id="setting-timezone"></select>
+            </div>
+          </div>
+
+          <div class="glass-card settings-card">
+            <h3 class="settings-section-title">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2"/></svg>
+              Güvenlik & Limitler
+            </h3>
+            <div class="form-group">
+              <label class="form-label">Günlük Global Mesaj Limiti</label>
+              <input type="number" class="form-input" id="setting-daily-limit" min="1" max="1000" value="200" />
+              <small class="form-hint">Tüm kampanyalar için günlük toplam limit</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Minimum Mesajlar Arası Bekleme (saniye)</label>
+              <input type="number" class="form-input" id="setting-min-delay" min="10" max="3600" value="45" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Maksimum Mesajlar Arası Bekleme (saniye)</label>
+              <input type="number" class="form-input" id="setting-max-delay" min="10" max="3600" value="180" />
+            </div>
+            <div class="form-group">
+              <label class="form-label toggle-label">
+                <span>Kara Liste Kontrolü</span>
+                <div class="toggle-switch">
+                  <input type="checkbox" id="setting-blacklist-enabled" checked />
+                  <span class="toggle-slider"></span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="glass-card settings-card full-width">
+            <h3 class="settings-section-title">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>
+              Aktif Günler (Varsayılan)
+            </h3>
+            <div class="days-selector" id="setting-days">
+              <label class="day-checkbox"><input type="checkbox" value="1" checked /><span>Pzt</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="2" checked /><span>Sal</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="3" checked /><span>Çar</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="4" checked /><span>Per</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="5" checked /><span>Cum</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="6" /><span>Cmt</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="7" /><span>Paz</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-actions">
+          <button class="btn btn-primary btn-lg" id="btn-save-settings">💾 Ayarları Kaydet</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- =================== MODALS =================== -->
+
+  <!-- Campaign Modal -->
+  <div class="modal-overlay" id="campaign-modal-overlay">
+    <div class="modal glass-card" id="campaign-modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="campaign-modal-title">Yeni Kampanya</h2>
+        <button class="modal-close" id="btn-close-campaign-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-form-grid">
+          <div class="form-group full-col">
+            <label class="form-label">Kampanya Adı *</label>
+            <input type="text" class="form-input" id="camp-name" placeholder="Kampanya adı..." />
+          </div>
+          <div class="form-group full-col">
+            <label class="form-label">Mesaj Şablonu *</label>
+            <select class="form-select" id="camp-template">
+              <option value="">Şablon seçin...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Hedef Kategori (Opsiyonel)</label>
+            <select class="form-select" id="camp-category">
+              <option value="">Tüm kişiler</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Günlük Mesaj Limiti</label>
+            <input type="number" class="form-input" id="camp-daily-limit" value="100" min="1" max="500" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Gönderim Başlangıcı</label>
+            <input type="time" class="form-input" id="camp-start-time" value="09:00" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gönderim Bitişi</label>
+            <input type="time" class="form-input" id="camp-end-time" value="18:00" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Saat Dilimi</label>
+            <select class="form-select" id="camp-timezone"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Min Bekleme (sn)</label>
+            <input type="number" class="form-input" id="camp-min-delay" value="45" min="10" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Max Bekleme (sn)</label>
+            <input type="number" class="form-input" id="camp-max-delay" value="180" min="10" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Başlangıç Tarihi</label>
+            <input type="date" class="form-input" id="camp-start-date" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bitiş Tarihi</label>
+            <input type="date" class="form-input" id="camp-end-date" />
+          </div>
+
+          <div class="form-group full-col">
+            <label class="form-label">Aktif Günler</label>
+            <div class="days-selector" id="camp-days">
+              <label class="day-checkbox"><input type="checkbox" value="1" checked /><span>Pzt</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="2" checked /><span>Sal</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="3" checked /><span>Çar</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="4" checked /><span>Per</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="5" checked /><span>Cum</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="6" /><span>Cmt</span></label>
+              <label class="day-checkbox"><input type="checkbox" value="7" /><span>Paz</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-campaign">İptal</button>
+        <button class="btn btn-primary" id="btn-save-campaign">💾 Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
